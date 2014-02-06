@@ -1,0 +1,19 @@
+<%= render 'shared/content_title', title: 'Post Categories' %>
+
+<table cellpadding="5">
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @categories.each do |category| %>
+      <tr>
+        <td><%= category.name %></td>
+        <td><%= link_to 'Edit', edit_category_path(category) %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

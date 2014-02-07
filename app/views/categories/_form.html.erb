@@ -1,17 +1,12 @@
-<% if @category.errors.any? %>
-  <div class='alert alert-error'>
-  <h5>There were some errors:</h5>
-  <ul>
-    <% @category.errors.full_messages.each do |msg| %>
-      <li><%= msg %></li>
-    <% end %>
-  </ul>
-</div>
-<% end %>
+<div class="well">
+  <%= render 'shared/errors', obj: @category %>
 
-<%= form_for @category do |f| %>
-  <%= f.label :name %>
-  <%= f.text_field :name %>
-  <br/>
-  <%= f.submit(@category.new_record? ? 'Create Category' : 'Update Category', class: 'btn btn-primary')%>
-<% end %>
+  <%= form_for @category do |f| %>
+    <div class="control-group">
+      <%= f.label :name %>
+      <%= f.text_field :name %>
+    </div>
+    <br/>
+    <%= f.submit(@category.new_record? ? 'Create Category' : 'Update Category', class: 'btn btn-success')%>
+  <% end %>
+</div>

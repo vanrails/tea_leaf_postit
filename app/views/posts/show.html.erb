@@ -3,8 +3,28 @@
 </p>
 
 <%= render 'shared/post_title', title: @post.title, link_title: @post.url %>
-<div class="well span8">
-  <p>
-    <div id="post_description"><%= @post.description %></div>
-  </p>
-</div>
+<%= render @post.categories %>
+<hr>
+<p>
+  <%= @post.description %>
+</p>
+<hr>
+
+<h5>Create a comment:</h5>
+<%= render 'shared/errors', obj: @comment %>
+<%= form_for [@post, @comment] do |f| %>
+  <%= f.text_area :body, rows: 5, class: 'span6' %>
+  <br/>
+  <%= f.submit "Create Comment", class: "btn btn-primary" %>
+<% end %>
+
+<h5>Comments:</h5>
+
+<% @post.comments.each do |comment| %>
+  <div class="well span8">
+    <em>"<%= comment.body %>"</em>
+    <br/>
+    <span class='quiet'>by</span> <%= comment.creator.username %>
+    <small>at <%= comment.created_at %></small>
+  </div>
+<% end %>

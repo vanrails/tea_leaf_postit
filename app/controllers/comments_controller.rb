@@ -1,8 +1,10 @@
 class CommentsController < ApplicationController
+  before_action :require_user
+
   def create
     @post = Post.find(params[:post_id])
     @comment = @post.comments.new(params.require(:comment).permit(:body))
-    @comment.creator = User.first
+    @comment.creator = current_user
 
     if @comment.save
       flash[:notice] = "Your comment was added"
@@ -10,5 +12,18 @@ class CommentsController < ApplicationController
     else
       render 'posts/show'
     end
+  end
+
+  def vote
+    comment = Comment.find(params[:id])
+    @vote = Vote.create(votable: comment, creator: current_user, vote: params[:vote])
+    
+    if @vote.valid?
+      flash[:notice] = "Your vote was counted."
+    else
+      flash[:error] = "You can only vote once."
+    end    
+
+    redirect_to :back
   end
 end

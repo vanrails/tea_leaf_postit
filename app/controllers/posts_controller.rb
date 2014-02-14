@@ -1,8 +1,9 @@
 class PostsController < ApplicationController
-  before_action :set_post, only: [:show, :edit, :update]
+  before_action :set_post, only: [:show, :edit, :update, :vote]
+  before_action :require_user, except: [:show, :index, :vote]
 
   def index
-    @posts = Post.all
+    @posts = Post.all.sort_by{|x| x.total_votes}.reverse
   end
 
   def show 
@@ -14,10 +15,8 @@ class PostsController < ApplicationController
   end
 
   def create
-    binding.pry
-
     @post = Post.new(post_params)
-    @post.creator = User.first #TODO: change once authentication
+    @post.creator = current_user
     
     if @post.save
       flash[:notice] = "Your post was created"
@@ -36,6 +35,18 @@ class PostsController < ApplicationController
     else
       render 'edit'
     end
+  end
+
+  def vote
+    @vote = Vote.create(votable: @post, creator: current_user, vote: params[:vote])
+
+    if @vote.valid?
+      flash[:notice] = "Your vote was counted."
+    else
+      flash[:error] = "There was an error, your vote was not counted."
+    end    
+
+    redirect_to :back
   end
 
   private

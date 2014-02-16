@@ -40,13 +40,17 @@ class PostsController < ApplicationController
   def vote
     @vote = Vote.create(votable: @post, creator: current_user, vote: params[:vote])
 
-    if @vote.valid?
-      flash[:notice] = "Your vote was counted."
-    else
-      flash[:error] = "There was an error, your vote was not counted."
-    end    
-
-    redirect_to :back
+    respond_to do |format|
+      format.html do 
+        if vote.valid?
+          flash[:notice] = 'Your vote was counted.'
+        else
+          flash[:error] = 'You can only vote on a post once.'
+        end
+        redirect_to :back
+      end 
+      format.js # render json @post.to_json
+    end
   end
 
   private
@@ -56,6 +60,6 @@ class PostsController < ApplicationController
   end
 
   def set_post
-    @post = Post.find(params[:id])
+    @post = Post.find_by(slug: params[:id])
   end
 end

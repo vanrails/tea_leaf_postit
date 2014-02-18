@@ -1,6 +1,7 @@
 class CategoriesController < ApplicationController
   before_action :set_category, only: [:edit, :update, :show]
   before_action :require_user, only: [:edit, :new, :create]
+  before_action :require_admin, only: [:edit, :net, :create]
 
   def index
     @categories = Category.all
